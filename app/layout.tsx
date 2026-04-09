@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
 import Navbar from "@/components/layout/Navbar";
+import WarningModal from "@/components/ui/WarningModal";
 import PageTransition from "@/components/layout/PageTransition";
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <WarningModal />
         <div className="flex min-h-screen">
           <Sidebar />
           <div className="flex-1 ml-64 flex flex-col">
