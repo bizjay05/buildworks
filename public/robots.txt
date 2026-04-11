@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /api/
+Disallow: /_next/
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /

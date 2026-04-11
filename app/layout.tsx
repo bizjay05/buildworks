@@ -1,3 +1,9 @@
+/**
+ * Copyright © 2026 BuildingWorks. All rights reserved.
+ * This source code and all its content are protected under copyright law.
+ * Any unauthorized reproduction or distribution is strictly prohibited.
+ */
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -5,6 +11,10 @@ import Sidebar from "@/components/layout/Sidebar";
 import Navbar from "@/components/layout/Navbar";
 import WarningModal from "@/components/ui/WarningModal";
 import PageTransition from "@/components/layout/PageTransition";
+import Honeypot from "@/components/ui/Honeypot";
+import ForensicMarking from "@/components/ui/ForensicMarking";
+import Footer from "@/components/ui/Footer";
+import SecurityShield from "@/components/ui/SecurityShield";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,15 +39,19 @@ export default function RootLayout({
   return (
     <html lang="ko" className="dark" style={{ colorScheme: "dark" }}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <SecurityShield />
+        <ForensicMarking />
+        <Honeypot />
         <WarningModal />
         <div className="flex min-h-screen">
           <Sidebar />
           <div className="flex-1 ml-64 flex flex-col">
             <Navbar />
-            <main className="flex-1 p-8 bg-background overflow-x-hidden">
+            <main className="flex-1 p-8 bg-background overflow-x-hidden flex flex-col">
               <PageTransition>
                 {children}
               </PageTransition>
+              <Footer />
             </main>
           </div>
         </div>
