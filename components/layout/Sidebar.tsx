@@ -25,7 +25,7 @@ const Sidebar = () => {
     { icon: Users, label: '세입자 관리', href: '/tenants' },
     { icon: CreditCard, label: '수납 현황', href: '/payments' },
     { icon: Receipt, label: '세금 관리', href: 'https://inradars365.vercel.app/tax', isExternal: true },
-    { icon: TrendingUp, label: '시세 관리', href: '/market-prices' },
+    { icon: TrendingUp, label: '시세 관리', href: 'https://inradars365.vercel.app/map', isExternal: true },
     { icon: Wrench, label: '유지보수', href: '/maintenance' },
     { icon: Bell, label: '공지사항', href: '/notice' },
   ];
