@@ -9,6 +9,7 @@ const BANNED_USER_AGENTS = [
 
 export function proxy(request: NextRequest) {
   const userAgent = request.headers.get('user-agent')?.toLowerCase() || '';
+  // @ts-ignore: NextRequest.ip may not be recognized by tsc in some environments
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
 
   const isBot = BANNED_USER_AGENTS.some((bot) => userAgent.includes(bot));
