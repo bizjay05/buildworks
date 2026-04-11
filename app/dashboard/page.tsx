@@ -41,9 +41,11 @@ const DashboardPage = () => {
     const [isUpdatingAI, setIsUpdatingAI] = useState(false);
     const [lastAIUpdate, setLastAIUpdate] = useState('');
     const [manualUpdateCount, setManualUpdateCount] = useState(0);
+    const [isMounted, setIsMounted] = useState(false);
 
-    // 초기 마운트 시 마지막 업데이트 날짜 설정 (한 달 전으로 시뮬레이션)
+    // 초기 마운트 시 마지막 업데이트 날짜 설정 및 렌더링 최적화
     useEffect(() => {
+        setIsMounted(true);
         const date = new Date();
         date.setMonth(date.getMonth() - 1);
         setLastAIUpdate(date.toLocaleDateString('ko-KR'));
@@ -69,7 +71,7 @@ const DashboardPage = () => {
     const [isChartHovered, setIsChartHovered] = useState(false);
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-700">
+        <div className="space-y-8 animate-in fade-in duration-300">
             <div className="flex flex-col gap-1 relative">
                 <h2 className="text-3xl font-bold tracking-tight">대시보드</h2>
                 <p className="text-secondary text-sm">오늘의 부동산 관리 현황을 요약해 드립니다.</p>
@@ -113,27 +115,31 @@ const DashboardPage = () => {
                         </select>
                     </div>
                     <div className="p-6 h-[320px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={revenueData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(59, 130, 246, 0.05)" />
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dy={10} />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
-                                <Tooltip
-                                    cursor={{ fill: 'rgba(59, 130, 246, 0.05)', radius: 8 }}
-                                    contentStyle={{ backgroundColor: '#0d1117', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: '16px', color: '#fff', fontSize: '12px', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.3)' }}
-                                    animationDuration={200}
-                                />
-                                <Bar
-                                    dataKey="value"
-                                    fill="#3b82f6"
-                                    radius={[6, 6, 0, 0]}
-                                    barSize={32}
-                                    animationDuration={500}
-                                    animationEasing="ease-out"
-                                    activeBar={{ fill: '#60a5fa', stroke: '#3b82f6', strokeWidth: 1 }}
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
+                        {isMounted ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={revenueData}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(59, 130, 246, 0.05)" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                                    <Tooltip
+                                        cursor={{ fill: 'rgba(59, 130, 246, 0.05)', radius: 8 }}
+                                        contentStyle={{ backgroundColor: '#0d1117', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: '16px', color: '#fff', fontSize: '12px', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.3)' }}
+                                        animationDuration={200}
+                                    />
+                                    <Bar
+                                        dataKey="value"
+                                        fill="#3b82f6"
+                                        radius={[6, 6, 0, 0]}
+                                        barSize={32}
+                                        animationDuration={500}
+                                        animationEasing="ease-out"
+                                        activeBar={{ fill: '#60a5fa', stroke: '#3b82f6', strokeWidth: 1 }}
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="w-full h-full bg-secondary/5 rounded-2xl animate-pulse" />
+                        )}
                     </div>
                 </div>
 
@@ -148,30 +154,34 @@ const DashboardPage = () => {
                             onMouseLeave={() => setIsChartHovered(false)}
                         >
                             <div className={`w-full h-full transition-transform duration-500 ease-out ${isChartHovered ? 'scale-110' : ''}`}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie
-                                            data={occupancyData}
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={65}
-                                            outerRadius={85}
-                                            paddingAngle={8}
-                                            dataKey="value"
-                                            stroke="none"
-                                            isAnimationActive={true}
-                                        >
-                                            {occupancyData.map((entry, index) => (
-                                                <Cell
-                                                    key={`cell-${index}`}
-                                                    fill={COLORS[index % COLORS.length]}
-                                                    stroke="none"
-                                                    style={{ outline: 'none' }}
-                                                />
-                                            ))}
-                                        </Pie>
-                                    </PieChart>
-                                </ResponsiveContainer>
+                                {isMounted ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={occupancyData}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius={65}
+                                                outerRadius={85}
+                                                paddingAngle={8}
+                                                dataKey="value"
+                                                stroke="none"
+                                                isAnimationActive={true}
+                                            >
+                                                {occupancyData.map((entry, index) => (
+                                                    <Cell
+                                                        key={`cell-${index}`}
+                                                        fill={COLORS[index % COLORS.length]}
+                                                        stroke="none"
+                                                        style={{ outline: 'none' }}
+                                                    />
+                                                ))}
+                                            </Pie>
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="w-full h-full rounded-full border-8 border-secondary/10 animate-pulse" />
+                                )}
                             </div>
                             <div className={`absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-transform duration-500 ease-out ${isChartHovered ? 'scale-110' : ''}`}>
                                 <p className="text-3xl font-black text-primary">85%</p>

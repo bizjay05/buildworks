@@ -29,6 +29,11 @@ import {
 const MarketPricesPage = () => {
     const [selectedBuilding, setSelectedBuilding] = useState('강남 프라임 빌딩');
     const [viewMode, setViewMode] = useState('chart'); // 'chart' or 'map'
+    const [isMounted, setIsMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     // 내 건물 리스트
     const myBuildings = [
@@ -55,7 +60,7 @@ const MarketPricesPage = () => {
     ];
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <div>
@@ -129,24 +134,28 @@ const MarketPricesPage = () => {
                     <div className="flex-1 p-6 relative">
                         {viewMode === 'chart' ? (
                             <div className="h-full w-full">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={priceTrendData}>
-                                        <defs>
-                                            <linearGradient id="colorMy" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
-                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                                            </linearGradient>
-                                        </defs>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff05" />
-                                        <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
-                                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
-                                        <Tooltip
-                                            contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }}
-                                        />
-                                        <Area type="monotone" dataKey="myPrice" stroke="#3b82f6" strokeWidth={4} fillOpacity={1} fill="url(#colorMy)" />
-                                        <Line type="monotone" dataKey="neighborhood" stroke="#94a3b8" strokeDasharray="5 5" strokeWidth={2} dot={false} />
-                                    </AreaChart>
-                                </ResponsiveContainer>
+                                {isMounted ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart data={priceTrendData}>
+                                            <defs>
+                                                <linearGradient id="colorMy" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff05" />
+                                            <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                                            <Tooltip
+                                                contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }}
+                                            />
+                                            <Area type="monotone" dataKey="myPrice" stroke="#3b82f6" strokeWidth={4} fillOpacity={1} fill="url(#colorMy)" />
+                                            <Line type="monotone" dataKey="neighborhood" stroke="#94a3b8" strokeDasharray="5 5" strokeWidth={2} dot={false} />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="w-full h-full bg-secondary/5 rounded-2xl animate-pulse" />
+                                )}
                             </div>
                         ) : (
                             <div className="h-full w-full rounded-2xl bg-card/10 border overflow-hidden relative group">

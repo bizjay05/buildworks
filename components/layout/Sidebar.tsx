@@ -1,5 +1,8 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Building2,
@@ -14,12 +17,14 @@ import {
 } from 'lucide-react';
 
 const Sidebar = () => {
+  const pathname = usePathname();
+  
   const menuItems = [
     { icon: LayoutDashboard, label: '대시보드', href: '/dashboard' },
     { icon: Building2, label: '건물 관리', href: '/buildings' },
     { icon: Users, label: '세입자 관리', href: '/tenants' },
     { icon: CreditCard, label: '수납 현황', href: '/payments' },
-    { icon: Receipt, label: '세금 관리', href: '/taxes' },
+    { icon: Receipt, label: '세금 관리', href: 'https://inradars365.vercel.app/tax', isExternal: true },
     { icon: TrendingUp, label: '시세 관리', href: '/market-prices' },
     { icon: Wrench, label: '유지보수', href: '/maintenance' },
     { icon: Bell, label: '공지사항', href: '/notice' },
@@ -34,20 +39,47 @@ const Sidebar = () => {
       </Link>
 
       <nav className="flex-1 px-4 py-4 space-y-2">
-        {menuItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-primary/10 hover:text-primary group text-secondary"
-          >
-            <item.icon size={20} className="group-hover:scale-110 transition-transform" />
-            <span className="font-medium">{item.label}</span>
-          </Link>
-        ))}
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href;
+          
+          if (item.isExternal) {
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group active:scale-95 hover:bg-primary/10 hover:text-primary text-secondary"
+              >
+                <item.icon size={20} className="group-hover:scale-110 transition-transform" />
+                <span className="font-medium">{item.label}</span>
+              </a>
+            );
+          }
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              prefetch={true}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group active:scale-95 ${
+                isActive 
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                  : 'hover:bg-primary/10 hover:text-primary text-secondary'
+              }`}
+            >
+              <item.icon 
+                size={20} 
+                className={`${isActive ? 'scale-110' : 'group-hover:scale-110'} transition-transform`} 
+              />
+              <span className="font-medium">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="p-4 border-t">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-danger hover:bg-danger/10 transition-colors">
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-danger hover:bg-danger/10 transition-colors active:scale-95">
           <LogOut size={20} />
           <span className="font-medium">로그아웃</span>
         </button>
