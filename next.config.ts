@@ -14,10 +14,10 @@ const nextConfig: NextConfig = {
             compact: true,
             controlFlowFlattening: false, // 성능을 위해 제어 흐름 왜곡 비활성화 (속도 대폭 향상)
             deadCodeInjection: false, // 죽은 코드 삽입 비활성화 (번들 크기 감소)
-            debugProtection: true,
-            debugProtectionInterval: 4000,
+            debugProtection: false,       // ✅ 페이지 전환 블로킹 제거
+            debugProtectionInterval: 0,   // ✅ 주기적 브라우저 freeze 제거
             disableConsoleOutput: true,
-            selfDefending: true,
+            selfDefending: false,         // ✅ 런타임 자체검증 루프 제거
           }, [])
         );
       } catch (e) {
