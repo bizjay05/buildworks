@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Building2, Users, CreditCard, AlertCircle, ArrowUpRight, ArrowDownRight, TrendingUp, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Building2, Users, CreditCard, AlertCircle, ArrowUpRight, ArrowDownRight, TrendingUp, ExternalLink, Compass } from 'lucide-react';
 import {
     BarChart,
     Bar,
@@ -38,33 +38,14 @@ const DashboardPage = () => {
         { name: '공실', value: 15 },
     ];
 
-    const [isUpdatingAI, setIsUpdatingAI] = useState(false);
-    const [lastAIUpdate, setLastAIUpdate] = useState('');
-    const [manualUpdateCount, setManualUpdateCount] = useState(0);
     const [isMounted, setIsMounted] = useState(false);
 
-    // 초기 마운트 시 마지막 업데이트 날짜 설정 및 렌더링 최적화
+    // 초기 마운트 시 렌더링 최적화
     useEffect(() => {
         setIsMounted(true);
-        const date = new Date();
-        date.setMonth(date.getMonth() - 1);
-        setLastAIUpdate(date.toLocaleDateString('ko-KR'));
     }, []);
 
-    const handleAIUpdate = () => {
-        if (manualUpdateCount >= 3) {
-            alert('일일 수동 업데이트 횟수(3회)를 초과했습니다. 내일 다시 시도해주세요.');
-            return;
-        }
 
-        setIsUpdatingAI(true);
-        // 1.5초 후 업데이트 완료 시뮬레이션
-        setTimeout(() => {
-            setLastAIUpdate(new Date().toLocaleDateString('ko-KR'));
-            setManualUpdateCount(prev => prev + 1);
-            setIsUpdatingAI(false);
-        }, 1500);
-    };
 
     const COLORS = ['#3b82f6', 'rgba(59, 130, 246, 0.1)'];
 
@@ -275,74 +256,46 @@ const DashboardPage = () => {
                     </div>
                 </div>
             </div>
-            {/* AI 인사이트 리포트 섹션 */}
-            <div className="glass p-8 rounded-[2rem] shadow-lg relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <TrendingUp size={120} />
+
+            {/* 부동산 분석 섹션 (인레이더 연결) */}
+            <div className="glass p-8 rounded-[2rem] shadow-lg relative overflow-hidden group border border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110">
+                    <Compass size={140} className="text-primary" />
                 </div>
 
-                <div className="relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                        <div className="flex items-center gap-3">
-                            <div className="p-3 rounded-2xl bg-primary text-white shadow-lg shadow-primary/20">
-                                <TrendingUp size={24} />
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="p-3 rounded-2xl bg-gradient-to-tr from-primary to-accent text-white shadow-lg shadow-primary/20">
+                                <Compass size={24} />
                             </div>
-                            <div>
-                                <h3 className="text-xl font-bold italic tracking-tight">AI 인사이트 리포트</h3>
-                                <p className="text-xs text-secondary font-medium">실시간 데이터 분석 기반 매니지먼트 제언</p>
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleAIUpdate}
-                            disabled={isUpdatingAI || manualUpdateCount >= 3}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition-all ${isUpdatingAI
-                                ? 'bg-secondary/10 text-secondary cursor-not-allowed'
-                                : manualUpdateCount >= 3
-                                    ? 'bg-secondary/5 text-secondary/40 cursor-not-allowed border'
-                                    : 'bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105 active:scale-95'
-                                }`}
-                        >
-                            <RefreshCw size={14} className={isUpdatingAI ? 'animate-spin' : ''} />
-                            <span>
-                                {isUpdatingAI ? '최신 데이터 분석 중...' :
-                                    manualUpdateCount >= 3 ? '일일 갱신 한도 초과' :
-                                        `수동 업데이트 (${3 - manualUpdateCount}/3회 남음)`}
+                            <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black rounded-lg uppercase tracking-widest border border-primary/20">
+                                Smart Analysis
                             </span>
-                        </button>
-                    </div>
+                        </div>
+                        <h3 className="text-2xl md:text-3xl font-black tracking-tight mb-3">
+                            인레이더 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">부동산 분석</span> 시스템
+                        </h3>
+                        <p className="text-secondary text-sm md:text-base leading-relaxed max-w-2xl">
+                            빅데이터를 활용한 부동산 투자 트렌드 파악과, 글로벌한 투자흐름을 확인하세요. 
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="glass p-6 rounded-3xl group/card relative overflow-hidden">
-                            <span className="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black rounded-lg uppercase tracking-widest">강남·역삼 분석</span>
-                            <h4 className="mt-3 font-bold text-base italic">압구정 재건축 및 GBD 시장</h4>
-                            <p className="mt-2 text-xs text-secondary leading-relaxed">
-                                압구정 재건축 속도가 붙으며 인근 역삼·강남 상업용 빌딩에 대한 '낙수효과'가 기대됩니다. 2024년 GBD 명목 임대료는 8.8% 상승했으며, 대출 규제 속에서도 테헤란로 중심의 <span className="text-primary font-bold">임대인 우위 시장</span>은 2025년까지 견고할 전망입니다.
-                            </p>
-                        </div>
-                        <div className="glass p-6 rounded-3xl group/card relative overflow-hidden">
-                            <span className="px-2 py-1 bg-accent/10 text-accent text-[10px] font-black rounded-lg uppercase tracking-widest">서초 분석</span>
-                            <h4 className="mt-3 font-bold text-base italic">서초 권역 초양극화 현상</h4>
-                            <p className="mt-2 text-xs text-secondary leading-relaxed">
-                                서초구는 매도자 우위의 '초양극화'가 심화되고 있습니다. 2025년 매매 지수 상승률 <span className="text-accent font-bold">17.6%</span>를 기록하며 신축 선호가 뚜렷합니다. 주택담보대출 한도 제한 등 정책 변동성이 크므로 장기 임차인 포트폴리오를 통한 리스크 분산이 필수적입니다.
-                            </p>
-                        </div>
-                        <div className="glass p-6 rounded-3xl group/card relative overflow-hidden">
-                            <span className="px-2 py-1 bg-success/10 text-success text-[10px] font-black rounded-lg uppercase tracking-widest">판교 분석</span>
-                            <h4 className="mt-3 font-bold text-base italic">스타트업 플래닛 및 IT 벨트</h4>
-                            <p className="mt-2 text-xs text-secondary leading-relaxed">
-                                금토동 '판교 스타트업 플래닛' 착공(2025년 예정)으로 지식산업센터 가치가 재조명 중입니다. 판교역 인근 84㎡ 아파트 시세가 <span className="text-success font-bold">24억 원대</span>로 안착하며, 젊은 고소득 근로자 유입에 따른 배후 상권 수익률이 안정화 단계에 진입했습니다.
-                            </p>
-                        </div>
+                        </p>
                     </div>
-
-                    <div className="mt-8 pt-6 border-t flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-success/5 rounded-lg border border-success/10">
-                            <CheckCircle2 size={12} className="text-success" />
-                            <span className="text-[10px] font-bold text-success">매월 자동 업데이트 활성화됨</span>
-                        </div>
-                        <p className="text-[10px] text-secondary/60 italic font-medium">최근 업데이트: {lastAIUpdate} | 데이터 소스: 국토부 실거래가 및 내부 자산 분석 시스템</p>
-                    </div>
+                    
+                    <a 
+                        href="https://inradars365.vercel.app/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 transition-all w-full md:w-auto justify-center group/btn"
+                    >
+                        <span>인레이더 분석 서비스 바로가기</span>
+                        <ExternalLink size={18} className="transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" />
+                    </a>
                 </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-64 h-24 bg-accent/5 rounded-full blur-3xl" />
             </div>
         </div>
     );
